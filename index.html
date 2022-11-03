@@ -1,0 +1,189 @@
+<html>
+<head>
+<style>
+body{
+  background-color:rgb(250, 191, 191);
+  width: auto;
+  margin: 0px;
+  background-image: url("IMG-3426.jpg");
+  background-attachment: fixed;
+}
+input {
+  width: 200px;
+  height: 30px ;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  padding: 12px;
+  border: 1px solid hsl(0, 10%, 4%);
+  border-radius: 6px;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  background-color: lightgray;
+ }
+ input[type=number]::-webkit-inner-spin-button, 
+ input[type=number]::-webkit-outer-spin-button 
+ { 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none; 
+}
+#table2{
+    border:1px solid black;
+    text-align : center;
+    background-color: rgb(255, 221, 198);
+    display:none; 
+    overflow: scroll;
+ }
+.table-dark{
+  background-color: rgb(247, 204, 176);
+    color: rgb(10, 117, 10);
+    }  
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse; 
+}
+
+tr,td,th{
+padding: 10px;
+}
+#submit{
+    background-color: rgb(102, 190, 102);
+    padding-right: 50px;
+    padding-left: 50px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    border-radius: 6px;
+   }
+img{
+    width: 150px;
+    height: 150px;
+   }
+#header{
+  border-bottom: 2px solid black;
+  background-color: rgb(227, 200, 141);
+   }
+#symbol{
+    padding-right: 0px;
+   }
+#independance{
+    float: right;
+  }
+  #post{
+    width: 600px;
+    padding-left: 0px;
+  }
+#footer{
+    background-color:rgb(135, 225, 135);
+    color: black;
+    text-align: center;
+    margin-top: 0px;
+  
+  }
+  #new{
+    padding: 10px;
+    width: 100%;
+    margin-top: 0px;
+    background-color: rgb(134, 176, 63);
+  }
+</style>
+
+</head>
+<body >
+  <header id="header">
+    <img src="symbol.png" id="symbol" alt="symbol">
+    <img src="https://www.indiapost.gov.in/_layouts/15/images/DOP.Portal.UILayer/India_Post_Logo_With_Text.svg"
+id="post" alt="indianpost">
+    <img src="independance.png" id="independance" alt="independance">
+    
+  </header>
+    <center>
+    <div>
+    <form>
+        <div style="padding-top:20px;">
+        <label for="text">Enter Indian Pincode<b>:</b></label>
+        <input type="number" class="form-control" id="pincode" placeholder="Enter Pincode" maxlength="6" />
+        </div>
+        <button id="submit" type="button" onclick="mypincode()"> Submit
+            
+        </button>
+    </form>
+    <br/>
+    </div>
+    </center>
+
+<div>
+  <center>
+<table id="table2">
+<thead class="table-dark">
+<tr>
+<th scope="col">Name</th>
+<th scope="col">Description</th>
+<th scope="col">BranchType</th>
+<th scope="col">DeliveryStatus</th>
+<th scope="col">Circle</th>
+<th scope="col">District</th>
+<th scope="col">Division</th>
+<th scope="col">Region</th>
+<th scope="col">State</th>
+<th scope="col">Country</th>
+</tr>
+</thead>
+<tbody id="table_body">
+</tbody>
+</table>
+  </center>
+</div><br><br>
+
+
+<div>
+<footer id="footer">
+  <div id="new"></div>
+  <p>This website belongs to Department of Posts, Ministry of Communications, GOI. Created and Managed by <b> Dhruvsoft Services Pvt Ltd.</b>
+  Content owned and updated by<br> Department of Posts, Ministry of Communications,Government of India</p>
+  <p>&copy;2022 All Rights Reserved By <b>Keerthi</b></p>
+
+</footer></div>
+<script>
+
+function mypincode() {
+    var pincode = document.getElementById("pincode").value;
+    var z = document.getElementById("pincode").value;
+    //if((!z.match(/^\d+/))||((fName.length >2)||((fName.length < 2)) )){
+    if ((!/^[0-9]+$/.test(z)) || ((pincode.length > 6) || ((pincode.length < 6)))) {
+       
+        alert(" Please Enter valid pincode");
+    }
+    
+    fetch("https://api.postalpincode.in/pincode/" + pincode)
+    .then((data)=>{
+        //console.log(data);
+        return data.json();  //converted to json formate
+    })
+    .then((objectData)=>{
+        console.log (objectData[0].PostOffice);
+        var postOfficedata  =objectData[0].PostOffice;
+        let tableData="";
+        postOfficedata.map((values)=>{
+            tableData+=`<tr>
+            <td>${values.Name}</td>
+            <td>${values.Description}</td>
+            <td>${values.BranchType}</td>
+            <td>${values.DeliveryStatus}</td>
+            <td>${values.Circle}</td>
+            <td>${values.District}</td>
+            <td>${values.Division}</td>
+            <td>${values.Region}</td>
+            <td>${values.State}</td>
+            <td>${values.Country}</td>
+          </tr>`;
+        });
+        document.getElementById("table_body").innerHTML=tableData;
+        document.getElementById("table2").style="display:inline-block";
+    })
+    .catch((error) =>alert("Cant fetch data"));
+}
+</script>
+</body>
+</html>
